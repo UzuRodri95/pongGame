@@ -165,10 +165,16 @@ def comprobarPunto():
 
 
 def comprobarColisionRaquetas():
-    if 370 < bola.xcor() < 380 and bola.ycor() < raquetaB.ycor() + 50 and bola.ycor() > raquetaB.ycor() - 50:
-        bola.dx *= -1
-    if -370 > bola.xcor() > -380 and bola.ycor() < raquetaA.ycor() + 50 and bola.ycor() > raquetaA.ycor() - 50:
-        bola.dx *= -1
+    if 370 < bola.xcor() < 380 and bola.ycor() < raquetaB.ycor() + 70 and bola.ycor() > raquetaB.ycor() - 70:
+        bola.dx = random.randint(1, 3)
+        bola.dy = random.randint(-2, 2)
+        bola.dx *= -1 - random.randint(1, 2)
+        bola.dy *= -1 * random.randint(1, 2)
+    if -370 > bola.xcor() > -380 and bola.ycor() < raquetaA.ycor() + 70 and bola.ycor() > raquetaA.ycor() - 70:
+        bola.dx = -1 - random.randint(1, 3)
+        bola.dy = -1 * random.randint(-2, 2)
+        bola.dx *= -1 * random.randint(1, 2)
+        bola.dy *= -1 * random.randint(1, 2)
 
 #Linking keyboard to player's movement
 ventana.listen()
@@ -181,7 +187,7 @@ while True:
     ventana.update()
     time.sleep(0.01)
 
-    bola.setx(bola.xcor() + bola.dx)
+    bola.setx(bola.xcor() + bola.dx + 1)
     bola.sety(bola.ycor() + bola.dy)
 
     comprobarColisionBordes()
