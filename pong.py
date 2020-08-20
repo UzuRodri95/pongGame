@@ -11,7 +11,7 @@ marcadorB = 0                                                                   
 ################### CREATION OF THE WINDOW, NAME AND BACKGROUND COLOR ##################################
 ########################################################################################################
 ventana = turtle.Screen()                                                                        #######
-ventana.title("PONG v1.1")                                                                       #######
+ventana.title("PONG v1.2")                                                                       #######
 ventana.bgcolor("black")                                                                         #######
 ventana.setup(width=800,height=400)                                                              #######
 ventana.tracer(0)                                                                                #######
@@ -66,10 +66,10 @@ delimitadorArribaB.shape("square")
 delimitadorAbajoA.shape("square")
 delimitadorAbajoB.shape("square")
 
-delimitadorArribaA.color("red")
-delimitadorArribaB.color("red")
-delimitadorAbajoA.color("red")
-delimitadorAbajoB.color("red")
+delimitadorArribaA.color("white")
+delimitadorArribaB.color("white")
+delimitadorAbajoA.color("white")
+delimitadorAbajoB.color("white")
 
 delimitadorArribaA.penup()
 delimitadorArribaB.penup()
@@ -160,6 +160,7 @@ def comprobarPunto():
         formacionInicialRaquetas()
         bola.goto(0,0)
         time.sleep(1)
+        bola.dx = 3
         bola.dx *= -1
 
     if bola.xcor() < -ventana.window_width()/2:
@@ -169,6 +170,7 @@ def comprobarPunto():
         formacionInicialRaquetas()
         bola.goto(0,0)
         time.sleep(1)
+        bola.dx = 3
         bola.dx *= -1
 
 
@@ -186,6 +188,35 @@ def comprobarColisionRaquetas():
         bola.dx *= -3 #random.randint(1, 2)
         bola.dy *= -1 * random.randint(1, 2)
 
+#It verifies if the game has finished
+def finJuego():
+    if (marcadorA == 11 or marcadorB == 11):
+        return True
+    else:
+        return False
+
+#Function with the main loop of the game that check all the stuff
+def juegoPong():
+    global marcadorA
+    global marcadorB
+    while True:
+        ventana.update()
+        time.sleep(0.01)
+        bola.setx(bola.xcor() + bola.dx)
+        bola.sety(bola.ycor() + bola.dy)
+
+        comprobarColisionBordes()
+        comprobarColisionRaquetas()
+        comprobarPunto()
+
+        if finJuego():
+            time.sleep(4)
+            marcador.clear()
+            marcador.write("0   0", align="center", font=("Courier", 50, "bold"))
+            marcadorA = 0
+            marcadorB = 0
+            break
+
 #Linking keyboard to player's movement
 ventana.listen()
 ventana.onkeypress(arribaA,"w")
@@ -193,15 +224,9 @@ ventana.onkeypress(abajoA,"s")
 ventana.onkeypress(arribaB,"Up")
 ventana.onkeypress(abajoB,"Down")
 
+#Loop that permites playing more matches
 while True:
-    ventana.update()
-    time.sleep(0.01)
-
-    bola.setx(bola.xcor() + bola.dx + 1)
-    bola.sety(bola.ycor() + bola.dy)
-
-    comprobarColisionBordes()
-    comprobarPunto()
-    comprobarColisionRaquetas()
+    juegoPong()
 
 turtle.Screen().exitonclick()
+
