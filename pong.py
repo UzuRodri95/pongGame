@@ -11,7 +11,7 @@ marcadorB = 0                                                                   
 ################### CREATION OF THE WINDOW, NAME AND BACKGROUND COLOR ##################################
 ########################################################################################################
 ventana = turtle.Screen()                                                                        #######
-ventana.title("PONG v1.0")                                                                       #######
+ventana.title("PONG v1.1")                                                                       #######
 ventana.bgcolor("black")                                                                         #######
 ventana.setup(width=800,height=400)                                                              #######
 ventana.tracer(0)                                                                                #######
@@ -118,23 +118,23 @@ raquetaB.shapesize(stretch_wid = 5, stretch_len = 0.5)
 ##########################################################################################
 #Functions for calculating player's up and down movements,
 def arribaA():
-    if raquetaA.distance(delimitadorArribaA) > 60:
-        y = raquetaA.ycor() + 20
+    if raquetaA.distance(delimitadorArribaA) > 80:
+        y = raquetaA.ycor() + 25
         raquetaA.sety(y)
 
 def arribaB():
-    if raquetaB.distance(delimitadorArribaB) > 60:
-        y = raquetaB.ycor() + 20
+    if raquetaB.distance(delimitadorArribaB) > 80:
+        y = raquetaB.ycor() + 25
         raquetaB.sety(y)
 
 def abajoA():
-    if raquetaA.distance(delimitadorAbajoA) > 60:
-        y = raquetaA.ycor() - 20
+    if raquetaA.distance(delimitadorAbajoA) > 80:
+        y = raquetaA.ycor() - 25
         raquetaA.sety(y)
 
 def abajoB():
-    if raquetaB.distance(delimitadorAbajoB) > 60:
-        y = raquetaB.ycor() - 20
+    if raquetaB.distance(delimitadorAbajoB) > 80:
+        y = raquetaB.ycor() - 25
         raquetaB.sety(y)
 
 #Confirms if the ball is touching one of the borders
@@ -144,6 +144,11 @@ def comprobarColisionBordes():
     if bola.ycor() < -ventana.window_height()/2 + 30:
         bola.dy *= -1
 
+#Locates the rackets in the initial position
+def formacionInicialRaquetas():
+    raquetaA.goto(-ventana.window_width()/2 + 20, 0)
+    raquetaB.goto(ventana.window_width() / 2 - 20, 0)
+
 #Confirms if the ball is touching one of the goals
 def comprobarPunto():
     global marcadorA
@@ -152,28 +157,33 @@ def comprobarPunto():
         marcadorA += 1
         marcador.clear()
         marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier", 50, "bold"))
+        formacionInicialRaquetas()
         bola.goto(0,0)
         time.sleep(1)
         bola.dx *= -1
+
     if bola.xcor() < -ventana.window_width()/2:
         marcadorB += 1
         marcador.clear()
         marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier", 50, "bold"))
+        formacionInicialRaquetas()
         bola.goto(0,0)
         time.sleep(1)
         bola.dx *= -1
 
 
+#Confirms if the ball is touching one of the rackets
 def comprobarColisionRaquetas():
     if 370 < bola.xcor() < 380 and bola.ycor() < raquetaB.ycor() + 70 and bola.ycor() > raquetaB.ycor() - 70:
-        bola.dx = random.randint(1, 3)
+        bola.dx = random.randint(2, 3)
         bola.dy = random.randint(-2, 2)
-        bola.dx *= -1 - random.randint(1, 2)
+        bola.dx *= -3 #random.randint(1, 2)
         bola.dy *= -1 * random.randint(1, 2)
+
     if -370 > bola.xcor() > -380 and bola.ycor() < raquetaA.ycor() + 70 and bola.ycor() > raquetaA.ycor() - 70:
-        bola.dx = -1 - random.randint(1, 3)
+        bola.dx = -random.randint(2, 3)
         bola.dy = -1 * random.randint(-2, 2)
-        bola.dx *= -1 * random.randint(1, 2)
+        bola.dx *= -3 #random.randint(1, 2)
         bola.dy *= -1 * random.randint(1, 2)
 
 #Linking keyboard to player's movement

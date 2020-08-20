@@ -11,7 +11,7 @@ marcadorB = 0                                                                   
 ################### CREATION OF THE WINDOW, NAME AND BACKGROUND COLOR ##################################
 ########################################################################################################
 ventana = turtle.Screen()                                                                        #######
-ventana.title("PONG v1.0_AI")                                                                       #######
+ventana.title("PONG_AI v1.1")                                                                       #######
 ventana.bgcolor("black")                                                                         #######
 ventana.setup(width=800,height=400)                                                              #######
 ventana.tracer(0)                                                                                #######
@@ -119,12 +119,12 @@ raquetaB.shapesize(stretch_wid = 5, stretch_len = 0.5)
 #Functions for calculating player's up and down movements,
 def arribaB():
     if raquetaB.distance(delimitadorArribaB) > 80:
-        y = raquetaB.ycor() + 20
+        y = raquetaB.ycor() + 25
         raquetaB.sety(y)
 
 def abajoB():
     if raquetaB.distance(delimitadorAbajoB) > 80:
-        y = raquetaB.ycor() - 20
+        y = raquetaB.ycor() - 25
         raquetaB.sety(y)
 
 #Function that calculates the movement of the IA racket depending on the y coordenate of the ball
@@ -152,6 +152,11 @@ def comprobarColisionBordes():
     if bola.ycor() < -ventana.window_height()/2 + 30:
         bola.dy *= -1
 
+#Locates the rackets in the initial position
+def formacionInicialRaquetas():
+    raquetaA.goto(-ventana.window_width()/2 + 20, 0)
+    raquetaB.goto(ventana.window_width() / 2 - 20, 0)
+
 #Confirms if the ball is touching one of the goals
 def comprobarPunto():
     global marcadorA
@@ -160,29 +165,34 @@ def comprobarPunto():
         marcadorA += 1
         marcador.clear()
         marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier", 50, "bold"))
+        formacionInicialRaquetas()
         bola.goto(0,0)
         time.sleep(1)
+        bola.dx = 3
         bola.dx *= -1
+
     if bola.xcor() < -ventana.window_width()/2:
         marcadorB += 1
         marcador.clear()
         marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier", 50, "bold"))
+        formacionInicialRaquetas()
         bola.goto(0,0)
         time.sleep(1)
+        bola.dx = -3
         bola.dx *= -1
 
-
+#Confirms if the ball is touching one of the rackets
 def comprobarColisionRaquetas():
     if 370 < bola.xcor() < 380 and bola.ycor() < raquetaB.ycor() + 70 and bola.ycor() > raquetaB.ycor() - 70:
         bola.dx = random.randint(2, 3)
         bola.dy = random.randint(-2, 2)
-        bola.dx *= -1 - random.randint(1, 2)
+        bola.dx *= -3   #random.randint(1, 2)
         bola.dy *= -1 * random.randint(1, 2)
 
     if -370 > bola.xcor() > -380 and bola.ycor() < raquetaA.ycor() + 70 and bola.ycor() > raquetaA.ycor() - 70:
-        bola.dx = -1 - random.randint(2, 3)
+        bola.dx = -random.randint(2, 3)
         bola.dy = -1 * random.randint(-2, 2)
-        bola.dx *= -1 * random.randint(1, 2)
+        bola.dx *= -3   #random.randint(1, 2)
         bola.dy *= -1 * random.randint(1, 2)
 
 #Linking keyboard to player's movement
