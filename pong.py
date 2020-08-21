@@ -7,6 +7,7 @@ import random
 ########################################################################################################
 marcadorA = 0                                                                                    #######
 marcadorB = 0                                                                                    #######
+PUNTUACION_MAX = 11                                                                              #######
 ########################################################################################################
 ################### CREATION OF THE WINDOW, NAME AND BACKGROUND COLOR ##################################
 ########################################################################################################
@@ -195,6 +196,44 @@ def finJuego():
     else:
         return False
 
+# Aimations when the match is finished
+def mostrarGanador():
+    letraSize = 50
+    if marcadorA == PUNTUACION_MAX or marcadorB == PUNTUACION_MAX:
+        marcador.color("red")
+
+        # Animation going up
+        while marcador.distance(0, 0) > 0:
+            marcador.clear()
+            time.sleep(0.1)
+            y = marcador.ycor() - 10
+            marcador.sety(y)
+            marcador.write(str(marcadorA) + "   " + str(marcadorB), align="center", font=("Courier", letraSize, "bold"))
+            letraSize += 5
+
+        # Blinking
+        for _ in range(0, 5):
+            marcador.clear()
+            marcador.write("   ", align="center", font=("Courier", letraSize, "bold"))
+            time.sleep(0.5)
+            marcador.write(str(marcadorA) + "   " + str(marcadorB), align="center", font=("Courier", letraSize, "bold"))
+            time.sleep(0.5)
+
+        # Animation going back
+        while marcador.distance(0, ventana.window_height() / 2 - 120) > 0:
+            marcador.clear()
+            time.sleep(0.1)
+            y = marcador.ycor() + 10
+            marcador.sety(y)
+            letraSize -= 5
+            marcador.write(str(marcadorA) + "   " + str(marcadorB), align="center", font=("Courier", letraSize, "bold"))
+
+        # Turning to white score
+        time.sleep(1)
+        marcador.color("white")
+        marcador.clear()
+        marcador.write("0   0", align="center", font=("Courier", letraSize, "bold"))
+
 #Function with the main loop of the game that check all the stuff
 def juegoPong():
     global marcadorA
@@ -210,7 +249,8 @@ def juegoPong():
         comprobarPunto()
 
         if finJuego():
-            time.sleep(4)
+            mostrarGanador()
+            time.sleep(2)
             marcador.clear()
             marcador.write("0   0", align="center", font=("Courier", 50, "bold"))
             marcadorA = 0

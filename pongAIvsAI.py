@@ -12,7 +12,7 @@ PUNTUACION_MAX = 11                                                             
 ################### CREATION OF THE WINDOW, NAME AND BACKGROUND COLOR ##################################
 ########################################################################################################
 ventana = turtle.Screen()                                                                        #######
-ventana.title("PONG_AI v1.2")                                                                       #######
+ventana.title("PONG_AIvsAI v1.0")                                                                #######
 ventana.bgcolor("black")                                                                         #######
 ventana.setup(width=800,height=400)                                                              #######
 ventana.tracer(0)                                                                                #######
@@ -128,22 +128,37 @@ def abajoB():
         y = raquetaB.ycor() - 25
         raquetaB.sety(y)
 
-#Function that calculates the movement of the IA racket depending on the y coordenate of the ball
-def moverIA():
+#Function that calculates the movement of the IA racket A depending on the y coordenate of the ball
+def moverIA_A():
     if bola.ycor() > 0 and raquetaA.distance(delimitadorArribaA) > 100 and raquetaA.ycor() < bola.ycor() and bola.xcor() < 0:
         y = raquetaA.ycor() + random.randint(1,10)
         raquetaA.sety(y)
     if bola.ycor() == 0 and raquetaA != 0:
         if raquetaA.ycor() < 0:
-            y = raquetaA.ycor() + random.randint(1, 10)
+            y = raquetaA.ycor() + random.randint(1, 15)
             raquetaA.sety(y)
         if raquetaA.ycor() > 0:
-            y = raquetaA.ycor() - random.randint(1, 10)
+            y = raquetaA.ycor() - random.randint(1, 15)
             raquetaA.sety(y)
     if bola.ycor() < 0 and raquetaA.distance(delimitadorAbajoA) > 100 and raquetaA.ycor() > bola.ycor() and bola.xcor() < 0:
         y = raquetaA.ycor() - random.randint(1,10)
         raquetaA.sety(y)
 
+#Function that calculates the movement of the IA racket B depending on the y coordenate of the ball
+def moverIA_B():
+    if bola.ycor() > 0 and raquetaB.distance(delimitadorArribaB) > 100 and raquetaB.ycor() < bola.ycor() and bola.xcor() > 0:
+        y = raquetaB.ycor() + random.randint(1,10)
+        raquetaB.sety(y)
+    if bola.ycor() == 0 and raquetaB != 0:
+        if raquetaB.ycor() < 0:
+            y = raquetaB.ycor() + random.randint(1, 15)
+            raquetaB.sety(y)
+        if raquetaB.ycor() > 0:
+            y = raquetaB.ycor() - random.randint(1, 15)
+            raquetaB.sety(y)
+    if bola.ycor() < 0 and raquetaB.distance(delimitadorAbajoB) > 100 and raquetaB.ycor() > bola.ycor() and bola.xcor() > 0:
+        y = raquetaB.ycor() - random.randint(1,10)
+        raquetaB.sety(y)
 
 
 #Confirms if the ball is touching one of the borders
@@ -187,55 +202,53 @@ def comprobarColisionRaquetas():
     if 370 < bola.xcor() < 380 and bola.ycor() < raquetaB.ycor() + 60 and bola.ycor() > raquetaB.ycor() - 60:
         bola.dx = random.randint(2, 3)
         bola.dy = random.randint(-2, 2)
-        bola.dx *= -3
         bola.dy *= -1 * random.randint(1, 2)
 
     if -370 > bola.xcor() > -380 and bola.ycor() < raquetaA.ycor() + 60 and bola.ycor() > raquetaA.ycor() - 60:
         bola.dx = -random.randint(2, 3)
         bola.dy = -1 * random.randint(-2, 2)
-        bola.dx *= -3
         bola.dy *= -1 * random.randint(1, 2)
 
 #It verifies if the game has finished
 def finJuego():
-    if (marcadorA == 11 or marcadorB == 11):
+    if (marcadorA == PUNTUACION_MAX or marcadorB == PUNTUACION_MAX):
         return True
     else:
         return False
 
-# Aimations when the match is finished
+#Aimations when the match is finished
 def mostrarGanador():
     letraSize = 50
     if marcadorA == PUNTUACION_MAX or marcadorB == PUNTUACION_MAX:
         marcador.color("red")
 
-        # Animation going up
-        while marcador.distance(0, 0) > 0:
+        #Animation going up
+        while marcador.distance(0,0) > 0:
             marcador.clear()
             time.sleep(0.1)
             y = marcador.ycor() - 10
             marcador.sety(y)
-            marcador.write(str(marcadorA) + "   " + str(marcadorB), align="center", font=("Courier", letraSize, "bold"))
+            marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier",letraSize, "bold"))
             letraSize += 5
 
-        # Blinking
-        for _ in range(0, 5):
+        #Blinking
+        for _ in range(0,5):
             marcador.clear()
             marcador.write("   ", align="center", font=("Courier", letraSize, "bold"))
             time.sleep(0.5)
-            marcador.write(str(marcadorA) + "   " + str(marcadorB), align="center", font=("Courier", letraSize, "bold"))
+            marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier",letraSize, "bold"))
             time.sleep(0.5)
 
-        # Animation going back
-        while marcador.distance(0, ventana.window_height() / 2 - 120) > 0:
+        #Animation going back
+        while marcador.distance(0,ventana.window_height()/2 - 120) > 0:
             marcador.clear()
             time.sleep(0.1)
             y = marcador.ycor() + 10
             marcador.sety(y)
             letraSize -= 5
-            marcador.write(str(marcadorA) + "   " + str(marcadorB), align="center", font=("Courier", letraSize, "bold"))
+            marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier",letraSize, "bold"))
 
-        # Turning to white score
+        #Turning to white score
         time.sleep(1)
         marcador.color("white")
         marcador.clear()
@@ -251,7 +264,8 @@ def juegoPong():
         bola.setx(bola.xcor() + bola.dx)
         bola.sety(bola.ycor() + bola.dy)
 
-        moverIA()
+        moverIA_A()
+        moverIA_B()
         comprobarColisionBordes()
         comprobarColisionRaquetas()
         comprobarPunto()
