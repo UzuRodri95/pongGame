@@ -1,6 +1,7 @@
 import turtle
 import time
 import random
+import pygame.mixer
 
 ########################################################################################################
 ########################################## VARIABLES ###################################################
@@ -11,10 +12,12 @@ PUNTUACION_MAX = 11                                                             
 ########################################################################################################
 ################### CREATION OF THE WINDOW, NAME AND BACKGROUND COLOR ##################################
 ########################################################################################################
+pygame.init()                                                                                    #######
 ventana = turtle.Screen()                                                                        #######
-ventana.title("PONG_AIvsAI v1.0")                                                                #######
+turtle.resizemode("noresize")                                                                    #######
+ventana.title("PONG_AIvsAI v1.4")                                                                #######
 ventana.bgcolor("black")                                                                         #######
-ventana.setup(width=800,height=400)                                                              #######
+ventana.setup(width=800,height=400)
 ventana.tracer(0)                                                                                #######
                                                                                                  #######
 ########################################################################################################
@@ -131,7 +134,7 @@ def abajoB():
 #Function that calculates the movement of the IA racket A depending on the y coordenate of the ball
 def moverIA_A():
     if bola.ycor() > 0 and raquetaA.distance(delimitadorArribaA) > 100 and raquetaA.ycor() < bola.ycor() and bola.xcor() < 0:
-        y = raquetaA.ycor() + random.randint(1,10)
+        y = raquetaA.ycor() + random.randint(1,15)
         raquetaA.sety(y)
     if bola.ycor() == 0 and raquetaA != 0:
         if raquetaA.ycor() < 0:
@@ -141,7 +144,7 @@ def moverIA_A():
             y = raquetaA.ycor() - random.randint(1, 15)
             raquetaA.sety(y)
     if bola.ycor() < 0 and raquetaA.distance(delimitadorAbajoA) > 100 and raquetaA.ycor() > bola.ycor() and bola.xcor() < 0:
-        y = raquetaA.ycor() - random.randint(1,10)
+        y = raquetaA.ycor() - random.randint(1,15)
         raquetaA.sety(y)
 
 #Function that calculates the movement of the IA racket B depending on the y coordenate of the ball
@@ -151,10 +154,10 @@ def moverIA_B():
         raquetaB.sety(y)
     if bola.ycor() == 0 and raquetaB != 0:
         if raquetaB.ycor() < 0:
-            y = raquetaB.ycor() + random.randint(1, 15)
+            y = raquetaB.ycor() + random.randint(1, 10)
             raquetaB.sety(y)
         if raquetaB.ycor() > 0:
-            y = raquetaB.ycor() - random.randint(1, 15)
+            y = raquetaB.ycor() - random.randint(1, 10)
             raquetaB.sety(y)
     if bola.ycor() < 0 and raquetaB.distance(delimitadorAbajoB) > 100 and raquetaB.ycor() > bola.ycor() and bola.xcor() > 0:
         y = raquetaB.ycor() - random.randint(1,10)
@@ -165,8 +168,12 @@ def moverIA_B():
 def comprobarColisionBordes():
     if bola.ycor() > ventana.window_height()/2 - 30:
         bola.dy *= -1
+        pygame.mixer.music.load("sounds/Rebote.ogg")
+        pygame.mixer.music.play()
     if bola.ycor() < -ventana.window_height()/2 + 30:
         bola.dy *= -1
+        pygame.mixer.music.load("sounds/Rebote.ogg")
+        pygame.mixer.music.play()
 
 #Locates the rackets in the initial position
 def formacionInicialRaquetas():
@@ -178,6 +185,8 @@ def comprobarPunto():
     global marcadorA
     global marcadorB
     if bola.xcor() > ventana.window_width()/2:
+        pygame.mixer.music.load("sounds/Gol.ogg")
+        pygame.mixer.music.play()
         marcadorA += 1
         marcador.clear()
         marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier", 50, "bold"))
@@ -187,7 +196,10 @@ def comprobarPunto():
         bola.dx = 3
         bola.dx *= -1
 
+
     if bola.xcor() < -ventana.window_width()/2:
+        pygame.mixer.music.load("sounds/Gol.ogg")
+        pygame.mixer.music.play()
         marcadorB += 1
         marcador.clear()
         marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier", 50, "bold"))
@@ -199,14 +211,20 @@ def comprobarPunto():
 
 #Confirms if the ball is touching one of the rackets, in case there is collition here is given a physic to the ball
 def comprobarColisionRaquetas():
-    if 370 < bola.xcor() < 380 and bola.ycor() < raquetaB.ycor() + 60 and bola.ycor() > raquetaB.ycor() - 60:
+    if 370 < bola.xcor() < 380 and bola.ycor() < raquetaB.ycor() + 70 and bola.ycor() > raquetaB.ycor() - 70:
+        pygame.mixer.music.load("sounds/Raqueta.ogg")
+        pygame.mixer.music.play()
         bola.dx = random.randint(2, 3)
         bola.dy = random.randint(-2, 2)
+        bola.dx *= -3
         bola.dy *= -1 * random.randint(1, 2)
 
-    if -370 > bola.xcor() > -380 and bola.ycor() < raquetaA.ycor() + 60 and bola.ycor() > raquetaA.ycor() - 60:
+    if -370 > bola.xcor() > -380 and bola.ycor() < raquetaA.ycor() + 70 and bola.ycor() > raquetaA.ycor() - 70:
+        pygame.mixer.music.load("sounds/Raqueta.ogg")
+        pygame.mixer.music.play()
         bola.dx = -random.randint(2, 3)
         bola.dy = -1 * random.randint(-2, 2)
+        bola.dx *= -3
         bola.dy *= -1 * random.randint(1, 2)
 
 #It verifies if the game has finished
@@ -232,7 +250,9 @@ def mostrarGanador():
             letraSize += 5
 
         #Blinking
+        pygame.mixer.music.load("sounds/Winning.ogg")
         for _ in range(0,5):
+            pygame.mixer.music.play()
             marcador.clear()
             marcador.write("   ", align="center", font=("Courier", letraSize, "bold"))
             time.sleep(0.5)
@@ -289,3 +309,4 @@ while True:
     juegoPong()
 
 turtle.Screen().exitonclick()
+

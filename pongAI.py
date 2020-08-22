@@ -1,6 +1,7 @@
 import turtle
 import time
 import random
+import pygame
 
 ########################################################################################################
 ########################################## VARIABLES ###################################################
@@ -11,8 +12,9 @@ PUNTUACION_MAX = 11                                                             
 ########################################################################################################
 ################### CREATION OF THE WINDOW, NAME AND BACKGROUND COLOR ##################################
 ########################################################################################################
+pygame.init()                                                                                    #######
 ventana = turtle.Screen()                                                                        #######
-ventana.title("PONG_AI v1.2")                                                                       #######
+ventana.title("PONG_AI v1.4")                                                                    #######
 ventana.bgcolor("black")                                                                         #######
 ventana.setup(width=800,height=400)                                                              #######
 ventana.tracer(0)                                                                                #######
@@ -150,8 +152,12 @@ def moverIA():
 def comprobarColisionBordes():
     if bola.ycor() > ventana.window_height()/2 - 30:
         bola.dy *= -1
+        pygame.mixer.music.load("sounds/Rebote.ogg")
+        pygame.mixer.music.play()
     if bola.ycor() < -ventana.window_height()/2 + 30:
         bola.dy *= -1
+        pygame.mixer.music.load("sounds/Rebote.ogg")
+        pygame.mixer.music.play()
 
 #Locates the rackets in the initial position
 def formacionInicialRaquetas():
@@ -163,6 +169,8 @@ def comprobarPunto():
     global marcadorA
     global marcadorB
     if bola.xcor() > ventana.window_width()/2:
+        pygame.mixer.music.load("sounds/Gol.ogg")
+        pygame.mixer.music.play()
         marcadorA += 1
         marcador.clear()
         marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier", 50, "bold"))
@@ -173,6 +181,8 @@ def comprobarPunto():
         bola.dx *= -1
 
     if bola.xcor() < -ventana.window_width()/2:
+        pygame.mixer.music.load("sounds/Gol.ogg")
+        pygame.mixer.music.play()
         marcadorB += 1
         marcador.clear()
         marcador.write(str(marcadorA) + "   " + str(marcadorB), align = "center", font=("Courier", 50, "bold"))
@@ -185,12 +195,16 @@ def comprobarPunto():
 #Confirms if the ball is touching one of the rackets, in case there is collition here is given a physic to the ball
 def comprobarColisionRaquetas():
     if 370 < bola.xcor() < 380 and bola.ycor() < raquetaB.ycor() + 60 and bola.ycor() > raquetaB.ycor() - 60:
+        pygame.mixer.music.load("sounds/Raqueta.ogg")
+        pygame.mixer.music.play()
         bola.dx = random.randint(2, 3)
         bola.dy = random.randint(-2, 2)
         bola.dx *= -3
         bola.dy *= -1 * random.randint(1, 2)
 
     if -370 > bola.xcor() > -380 and bola.ycor() < raquetaA.ycor() + 60 and bola.ycor() > raquetaA.ycor() - 60:
+        pygame.mixer.music.load("sounds/Raqueta.ogg")
+        pygame.mixer.music.play()
         bola.dx = -random.randint(2, 3)
         bola.dy = -1 * random.randint(-2, 2)
         bola.dx *= -3
@@ -219,7 +233,9 @@ def mostrarGanador():
             letraSize += 5
 
         # Blinking
+        pygame.mixer.music.load("sounds/Winning.ogg")
         for _ in range(0, 5):
+            pygame.mixer.music.play()
             marcador.clear()
             marcador.write("   ", align="center", font=("Courier", letraSize, "bold"))
             time.sleep(0.5)
