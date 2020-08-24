@@ -1,4 +1,4 @@
-# pongGame v1.4
+# pongGame v1.5
 
 Mythical Pong game make by myself using "turtle" and "pygame" libraries from Python.
 
