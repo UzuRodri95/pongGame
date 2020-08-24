@@ -3,135 +3,125 @@ import time
 import random
 import pygame.mixer
 
-########################################################################################################
-########################################## VARIABLES ###################################################
-########################################################################################################
-marcadorA = 0                                                                                    #######
-marcadorB = 0                                                                                    #######
-PUNTUACION_MAX = 11                                                                              #######
-########################################################################################################
-################### CREATION OF THE WINDOW, NAME AND BACKGROUND COLOR ##################################
-########################################################################################################
-pygame.init()                                                                                    #######
-ventana = turtle.Screen()                                                                        #######
-turtle.resizemode("noresize")                                                                    #######
-ventana.title("PONG_AIvsAI v1.4")                                                                #######
-ventana.bgcolor("black")                                                                         #######
-ventana.setup(width=800,height=400)
-ventana.tracer(0)                                                                                #######
-                                                                                                 #######
-########################################################################################################
-############################## CREATION OF BORDERS AND MIDDLE LINE #####################################
-########################################################################################################                                                                                        #######
-#If the window's width is 800, the range would be from -400 to 400                               #######
-bordeSuperior = turtle.Turtle()                                                                  #######
-bordeInferior = turtle.Turtle()                                                                  #######
-lineaMedio = turtle.Turtle()                                                                     #######
-                                                                                                 #######
-bordeSuperior.color("white")
-bordeSuperior.shape("square")
-bordeSuperior.penup()
-bordeSuperior.goto(0,ventana.window_height()/2)
-bordeSuperior.shapesize(stretch_len=300, stretch_wid=2)
+# GLOBAL VARIABLES
+marcadorA = 0
+marcadorB = 0
+PUNTUACION_MAX = 11
 
-bordeInferior.color("white")
-bordeInferior.shape("square")
-bordeInferior.penup()
-bordeInferior.goto(0,-ventana.window_height()/2)
-bordeInferior.shapesize(stretch_len=300, stretch_wid=2)
-
-lineaMedio.color("black")
-lineaMedio.goto(0, ventana.window_height()/2)
-lineaMedio.color("white")
-lineaMedio.pensize(5)
-lineaMedio.goto(0, -ventana.window_height()/2)
-lineaMedio.pensize(30)
-
-########################################################################################################
-############################################## SCORE ###################################################
-########################################################################################################
+# TURTLE VARIABLES
+ventana = turtle.Screen()
+bordeSuperior = turtle.Turtle()
+bordeInferior = turtle.Turtle()
+lineaMedio = turtle.Turtle()
 marcador = turtle.Turtle()
-marcador.speed(0)
-marcador.color("white")
-marcador.hideturtle()
-marcador.goto(0, ventana.window_height()/2 - 120)
-marcador.write("0   0", align = "center", font=("Courier", 50, "bold"))
-
-########################################################################################################
-####################################### CREATION OF DELIMITERS #########################################
-########################################################################################################
 delimitadorArribaA = turtle.Turtle()
 delimitadorArribaB = turtle.Turtle()
 delimitadorAbajoA = turtle.Turtle()
 delimitadorAbajoB = turtle.Turtle()
-
-delimitadorArribaA.shape("square")
-delimitadorArribaB.shape("square")
-delimitadorAbajoA.shape("square")
-delimitadorAbajoB.shape("square")
-
-delimitadorArribaA.color("white")
-delimitadorArribaB.color("white")
-delimitadorAbajoA.color("white")
-delimitadorAbajoB.color("white")
-
-delimitadorArribaA.penup()
-delimitadorArribaB.penup()
-delimitadorAbajoA.penup()
-delimitadorAbajoB.penup()
-
-delimitadorArribaA.goto(-ventana.window_width()/2 + 20, ventana.window_height()/2)
-delimitadorArribaB.goto(ventana.window_width()/2 - 20, ventana.window_height()/2)
-delimitadorAbajoA.goto(-ventana.window_width()/2 + 20, -ventana.window_height()/2)
-delimitadorAbajoB.goto(ventana.window_width()/2 - 20, -ventana.window_height()/2)
-##########################################################################################
-############################# CREATION OF THE BALL #######################################
-##########################################################################################
 bola = turtle.Turtle()
-bola.speed(0)
-bola.shape("circle")
-bola.color("red")
-bola.pensize(20)
-bola.penup()
-bola.goto(0,0)
-bola.direction = "up"
+raquetaA = turtle.Turtle()
+raquetaB = turtle.Turtle()
 bola.dx = 3
 bola.dy = 3
 
-##########################################################################################
-######################### CREATION OF THE PLAYER RAQUETS #################################
-##########################################################################################
-raquetaA = turtle.Turtle()
-raquetaA.speed(0)
-raquetaA.shape("square")
-raquetaA.color("white")
-raquetaA.penup()
-raquetaA.goto(-ventana.window_width()/2 + 20, 0)
-raquetaA.shapesize(stretch_wid = 5, stretch_len = 0.5)
+#CREATION OF THE WINDOW, AND ALL WHAT IT WILL CONTAIN
+def crearEntorno():
 
-raquetaB = turtle.Turtle()
-raquetaB.speed(0)
-raquetaB.shape("square")
-raquetaB.color("white")
-raquetaB.penup()
-raquetaB.goto(ventana.window_width()/2 - 20, 0)
-raquetaB.shapesize(stretch_wid = 5, stretch_len = 0.5)
+    #CREATION OF THE WINDOW, NAME AND BACKGROUND COLOR
+    ventana.title("PONG v1.5")
+    ventana.bgcolor("black")
+    ventana.setup(width=800,height=400)
+    ventana.tracer(0)
 
-##########################################################################################
-################################### UTIL FUNCTIONS #######################################
-##########################################################################################
-#Functions for calculating player's up and down movements,
-def arribaB():
-    if raquetaB.distance(delimitadorArribaB) > 80:
-        y = raquetaB.ycor() + 25
-        raquetaB.sety(y)
+    #CREATION OF BORDERS AND MIDDLE LINE. If the window's width is 800, the range would be from -400 to 400
+    bordeSuperior.color("white")
+    bordeSuperior.shape("square")
+    bordeSuperior.penup()
+    bordeSuperior.goto(0,ventana.window_height()/2)
+    bordeSuperior.shapesize(stretch_len=300, stretch_wid=2)
 
-def abajoB():
-    if raquetaB.distance(delimitadorAbajoB) > 80:
-        y = raquetaB.ycor() - 25
-        raquetaB.sety(y)
+    bordeInferior.color("white")
+    bordeInferior.shape("square")
+    bordeInferior.penup()
+    bordeInferior.goto(0,-ventana.window_height()/2)
+    bordeInferior.shapesize(stretch_len=300, stretch_wid=2)
 
-#Function that calculates the movement of the IA racket A depending on the y coordenate of the ball
+    lineaMedio.color("black")
+    lineaMedio.goto(0, ventana.window_height()/2)
+    lineaMedio.color("white")
+    lineaMedio.pensize(5)
+    lineaMedio.goto(0, -ventana.window_height()/2)
+    lineaMedio.pensize(30)
+
+    #SCORE
+    marcador.speed(0)
+    marcador.color("white")
+    marcador.hideturtle()
+    marcador.goto(0, ventana.window_height()/2 - 120)
+    marcador.write("0   0", align = "center", font=("Courier", 50, "bold"))
+
+    #CREATION OF DELIMITERS
+    delimitadorArribaA.shape("square")
+    delimitadorArribaB.shape("square")
+    delimitadorAbajoA.shape("square")
+    delimitadorAbajoB.shape("square")
+
+    delimitadorArribaA.color("white")
+    delimitadorArribaB.color("white")
+    delimitadorAbajoA.color("white")
+    delimitadorAbajoB.color("white")
+
+    delimitadorArribaA.penup()
+    delimitadorArribaB.penup()
+    delimitadorAbajoA.penup()
+    delimitadorAbajoB.penup()
+
+    delimitadorArribaA.goto(-ventana.window_width()/2 + 20, ventana.window_height()/2)
+    delimitadorArribaB.goto(ventana.window_width()/2 - 20, ventana.window_height()/2)
+    delimitadorAbajoA.goto(-ventana.window_width()/2 + 20, -ventana.window_height()/2)
+    delimitadorAbajoB.goto(ventana.window_width()/2 - 20, -ventana.window_height()/2)
+
+    #CREATION OF THE BALL
+    bola.speed(0)
+    bola.shape("circle")
+    colorBola()
+    bola.pensize(20)
+    bola.penup()
+    bola.goto(0,0)
+    bola.direction = "up"
+
+    #CREATION OF THE PLAYER RAQUETS
+    raquetaA.speed(0)
+    raquetaA.shape("square")
+    raquetaA.color("white")
+    raquetaA.penup()
+    raquetaA.goto(-ventana.window_width()/2 + 20, 0)
+    raquetaA.shapesize(stretch_wid = 5, stretch_len = 0.5)
+
+    raquetaB.speed(0)
+    raquetaB.shape("square")
+    raquetaB.color("white")
+    raquetaB.penup()
+    raquetaB.goto(ventana.window_width()/2 - 20, 0)
+    raquetaB.shapesize(stretch_wid = 5, stretch_len = 0.5)
+
+#COLOR OF THE BALL IS TAKEN RANDOMLY
+def colorBola():
+    num = random.randint(0, 5)
+    if num == 0:
+        bola.color("green")
+    if num == 1:
+        bola.color("white")
+    if num == 2:
+        bola.color("blue")
+    if num == 3:
+        bola.color("red")
+    if num == 4:
+        bola.color("yellow")
+    if num == 5:
+        bola.color("pink")
+
+#FUNCTION THAT CALCULATES THE MOVEMENT OF THE IA RACKET A DEPENDING ON THE Y COORDINATE OF THE BALL
 def moverIA_A():
     if bola.ycor() > 0 and raquetaA.distance(delimitadorArribaA) > 100 and raquetaA.ycor() < bola.ycor() and bola.xcor() < 0:
         y = raquetaA.ycor() + random.randint(1,15)
@@ -164,7 +154,7 @@ def moverIA_B():
         raquetaB.sety(y)
 
 
-#Confirms if the ball is touching one of the borders
+#CONFIRMS IF THE BALL IS TOUCHING ONE OF THE BORDERS
 def comprobarColisionBordes():
     if bola.ycor() > ventana.window_height()/2 - 30:
         bola.dy *= -1
@@ -175,12 +165,12 @@ def comprobarColisionBordes():
         pygame.mixer.music.load("sounds/Rebote.ogg")
         pygame.mixer.music.play()
 
-#Locates the rackets in the initial position
+#LOCATES THE RACKETS IN THE INITIAL POSITION
 def formacionInicialRaquetas():
     raquetaA.goto(-ventana.window_width()/2 + 20, 0)
     raquetaB.goto(ventana.window_width() / 2 - 20, 0)
 
-#Confirms if the ball is touching one of the goals
+#CONFIRMS IF THE BALL IS TOUCHING ONE OF THE GOALS
 def comprobarPunto():
     global marcadorA
     global marcadorB
@@ -209,7 +199,7 @@ def comprobarPunto():
         bola.dx = -3
         bola.dx *= -1
 
-#Confirms if the ball is touching one of the rackets, in case there is collition here is given a physic to the ball
+#CONFIRMS IF THE BALL IS TOUCHING ONE OF THE RACKETS
 def comprobarColisionRaquetas():
     if 370 < bola.xcor() < 380 and bola.ycor() < raquetaB.ycor() + 70 and bola.ycor() > raquetaB.ycor() - 70:
         pygame.mixer.music.load("sounds/Raqueta.ogg")
@@ -227,14 +217,14 @@ def comprobarColisionRaquetas():
         bola.dx *= -3
         bola.dy *= -1 * random.randint(1, 2)
 
-#It verifies if the game has finished
+#IT VERIFIES IF THE GAME HAS FINISHED
 def finJuego():
     if (marcadorA == PUNTUACION_MAX or marcadorB == PUNTUACION_MAX):
         return True
     else:
         return False
 
-#Aimations when the match is finished
+#ANIMATIONS WHEN THE MATCH IS FINISHED
 def mostrarGanador():
     letraSize = 50
     if marcadorA == PUNTUACION_MAX or marcadorB == PUNTUACION_MAX:
@@ -274,7 +264,7 @@ def mostrarGanador():
         marcador.clear()
         marcador.write("0   0", align="center", font=("Courier", letraSize, "bold"))
 
-#Function with the main loop of the game that check all the stuff
+#FUNCTION WITH THE MAIN LOOP OF THE GAME THAT CHECK ALL THE STUFF
 def juegoPong():
     global marcadorA
     global marcadorB
@@ -299,14 +289,16 @@ def juegoPong():
             marcadorB = 0
             break
 
-#Linking keyboard to player's movement
-ventana.listen()
-ventana.onkeypress(arribaB,"Up")
-ventana.onkeypress(abajoB,"Down")
+#MAIN
+if __name__ == "__main__":
+    crearEntorno()
 
-#Loop that permites playing more matches
-while True:
-    juegoPong()
+    # Loop that permits playing more matches
+    while True:
+        pygame.init()
+        juegoPong()
 
-turtle.Screen().exitonclick()
+    turtle.Screen().exitonclick()
+
+
 
